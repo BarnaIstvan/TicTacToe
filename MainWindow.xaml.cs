@@ -7,9 +7,9 @@ namespace TicTacToe
 {
     public partial class MainWindow : Window
     {
-        private char currentPlayer = 'X';
-        private char[,] gridArray = new char[3, 3];
-        private bool gameFinished = false;
+        private char currentPlayer = 'X'; //Jelöli az aktuális játékost
+        private char[,] gridArray = new char[3, 3]; //3x3-as kétdimenziós tömb
+        private bool gameFinished = false; //Jelzi a játék végét
 
         public MainWindow()
         {
@@ -30,6 +30,7 @@ namespace TicTacToe
 
         private bool PlayerWins(char playerValue)
         {
+            //Sorok és oszlopok ellenőrzése
             for (int i = 0; i < 3; i++)
             {
                 if (gridArray[i, 0] == playerValue && gridArray[i, 1] == playerValue && gridArray[i, 2] == playerValue)
@@ -37,6 +38,7 @@ namespace TicTacToe
                 if (gridArray[0, i] == playerValue && gridArray[1, i] == playerValue && gridArray[2, i] == playerValue)
                     return true;
             }
+            //Átlók ellenőrzése
             if (gridArray[0, 0] == playerValue && gridArray[1, 1] == playerValue && gridArray[2, 2] == playerValue)
                 return true;
             if (gridArray[0, 2] == playerValue && gridArray[1, 1] == playerValue && gridArray[2, 0] == playerValue)
@@ -44,7 +46,7 @@ namespace TicTacToe
             return false;
         }
 
-        private bool IsGameFinished()
+        private bool IsGameFinished() //Ellenőrzi hogy vab-e még üres mező
         {
             for (int row = 0; row < 3; row++)
             {
@@ -57,7 +59,7 @@ namespace TicTacToe
             return true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e) //Eseménykezelő a gomb megnyomásakor
         {
             Button btn = (Button)sender;
             int row = Grid.GetRow(btn);
@@ -65,6 +67,7 @@ namespace TicTacToe
 
             if (!gameFinished && btn.Content == null)
             {
+                //Beállítja a gomb tartalmát az aktuális játékos jelével
                 btn.Content = currentPlayer;
                 btn.IsEnabled = false;
                 SolidColorBrush bgBrush = new SolidColorBrush();
@@ -76,18 +79,21 @@ namespace TicTacToe
 
                 gridArray[row, col] = currentPlayer;
 
+                //Ha az egyik játékos nyert
                 if (PlayerWins(currentPlayer))
                 {
-                    MessageBox.Show($"{currentPlayer} Has Won", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show($"{currentPlayer} has WON", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     gameFinished = true;
                     Close();
                 }
+                //Ha döntetlen
                 else if (IsGameFinished())
                 {
-                    MessageBox.Show("It's a tie!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("It's a TIE!", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
                     gameFinished = true;
                     Close();
                 }
+                //Ha a játék folytatódik a másikra vált
                 else
                 {
                     currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
